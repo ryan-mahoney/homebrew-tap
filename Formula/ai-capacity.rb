@@ -12,7 +12,7 @@ class AiCapacity < Formula
 
   def install
     libexec.install "ai_capacity", "launch.py", "report-cli", "licenses"
-    (bin/"ai-capacity").write_env_script Formula["python@3.14"].opt_bin/"python3.14",
+    (bin/"ai-capacity").write_env_script formula_opt_bin("python@3.14")/"python3.14",
                                         ["-I", "\"#{libexec}/launch.py\""], {}
     (bin/"ai-capacity-report").write_env_script libexec/"report-cli/codexbar", {}
   end
@@ -37,7 +37,7 @@ class AiCapacity < Formula
     system({ "CODEXBAR_RESOURCE_SMOKE" => "1" }, bin/"ai-capacity-report")
 
     # The installed dashboard uses its own binary without a source checkout or PATH lookup.
-    system Formula["python@3.14"].opt_bin/"python3.14", "-I", "-c", <<~PYTHON
+    system formula_opt_bin("python@3.14")/"python3.14", "-I", "-c", <<~PYTHON
       import sys
       from pathlib import Path
       sys.path.insert(0, #{libexec.to_s.inspect})
@@ -58,7 +58,7 @@ class AiCapacity < Formula
       exec bin/"ai-capacity", "--no-open", "--no-opencode", "--codexbar", fixture.to_s, "--port", port.to_s
     end
     begin
-      system Formula["python@3.14"].opt_bin/"python3.14", "-I", "-c", <<~PYTHON
+      system formula_opt_bin("python@3.14")/"python3.14", "-I", "-c", <<~PYTHON
         import json, time
         from urllib.request import urlopen
         base = "http://127.0.0.1:#{port}"

@@ -1,0 +1,48 @@
+name: Publish bottle
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-ai-capacity-bottle
+  cancel-in-progress: false
+
+jobs:
+  bottle:
+    runs-on: macos-14
+    timeout-minutes: 30
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_INSTALL_CLEANUP: '1'
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and test the payload
+        run: |
+          test "$(uname -m)" = arm64
+          brew update
+          brew install --build-bottle ryan-mahoney/tap/ai-capacity
+          brew test ryan-mahoney/tap/ai-capacity
+          brew style --formula ryan-mahoney/tap/ai-capacity
+      - name: Package bottle
+        run: |
+          version=$(brew info --json=v2 ryan-mahoney/tap/ai-capacity | jq -r '.formulae[0].versions.stable')
+          echo "RELEASE_TAG=ai-capacity-$version" >> "$GITHUB_ENV"
+          brew bottle --json --no-rebuild \
+            --root-url="https://github.com/$GITHUB_REPOSITORY/releases/download/ai-capacity-$version" \
+            ryan-mahoney/tap/ai-capacity
+          brew bottle --merge --write --no-commit ./*.bottle.json
+          cp "$(brew --repository ryan-mahoney/tap)/Formula/ai-capacity.rb" Formula/ai-capacity.rb
+      - name: Publish and register bottle
+        run: |
+          gh release create "$RELEASE_TAG" ./*.bottle.tar.gz ./*.bottle.json \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title "$RELEASE_TAG" --notes "Tested Homebrew binary package for Apple Silicon Macs."
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Formula/ai-capacity.rb
+          git commit -m "chore: publish $RELEASE_TAG bottle"
+          git push origin HEAD:main

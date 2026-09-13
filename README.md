@@ -33,3 +33,10 @@ brew test ryan-mahoney/tap/ai-capacity
 The test uses synthetic data. It does not read account credentials or contact providers.
 
 The [source repository](https://github.com/ryan-mahoney/CodexBar) contains the dashboard, report command, and release instructions.
+
+## Publish an update
+
+Update the formula's version, source URL, and checksum after the source release completes.
+Remove the old `bottle` block, then commit and push the formula.
+Run the `Publish bottle` workflow. It tests the package on macOS 14, publishes the bottle, and commits its checksum.
+The bottle lets Homebrew install the package without a source build or compiler check.
