@@ -24,6 +24,7 @@ jobs:
         run: |
           test "$(uname -m)" = arm64
           brew update
+          brew install python@3.14
           brew install --build-bottle ryan-mahoney/tap/ai-capacity
           brew test ryan-mahoney/tap/ai-capacity
           brew style --formula ryan-mahoney/tap/ai-capacity
