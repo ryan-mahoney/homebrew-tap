@@ -6,6 +6,11 @@ class AiCapacity < Formula
   sha256 "3950c8a273a3b85dedae9a5311a833511694060a56551e641531a4db0280a90f"
   license all_of: ["MIT", "OFL-1.1", "Apache-2.0"]
 
+  bottle do
+    root_url "https://github.com/ryan-mahoney/homebrew-tap/releases/download/ai-capacity-0.1.1"
+    sha256 arm64_sonoma: "c88aefb64b1dfe985e314e2e2b1abebb16c1bf5fd3d4686cec10d724753a56d8"
+  end
+
   depends_on arch: :arm64
   depends_on macos: :sonoma
   depends_on "python@3.14"
