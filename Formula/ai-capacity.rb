@@ -34,7 +34,9 @@ class AiCapacity < Formula
     assert_match "ai-capacity #{version}", shell_output("#{bin}/ai-capacity --version")
     assert_match "--no-open", shell_output("#{bin}/ai-capacity --help")
     assert_match "report", shell_output("#{bin}/ai-capacity-report report --help")
-    system({ "CODEXBAR_RESOURCE_SMOKE" => "1" }, bin/"ai-capacity-report")
+    ENV["CODEXBAR_RESOURCE_SMOKE"] = "1"
+    system bin/"ai-capacity-report"
+    ENV.delete("CODEXBAR_RESOURCE_SMOKE")
 
     # The installed dashboard uses its own binary without a source checkout or PATH lookup.
     system formula_opt_bin("python@3.14")/"python3.14", "-I", "-c", <<~PYTHON
