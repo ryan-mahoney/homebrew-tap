@@ -1,15 +1,10 @@
 class AiCapacity < Formula
   desc "Local dashboard of AI subscription allowances and prepaid balances"
   homepage "https://github.com/ryan-mahoney/CodexBar"
-  url "https://github.com/ryan-mahoney/CodexBar/releases/download/ai-capacity-v0.1.0/ai-capacity-0.1.0-macos-arm64.tar.gz"
-  version "0.1.0"
-  sha256 "a432c377482e321eaf4be5998ef4737de6faa7301c79a2ebb85bb73ad491f29f"
+  url "https://github.com/ryan-mahoney/CodexBar/releases/download/ai-capacity-v0.1.1/ai-capacity-0.1.1-macos-arm64.tar.gz"
+  version "0.1.1"
+  sha256 "3950c8a273a3b85dedae9a5311a833511694060a56551e641531a4db0280a90f"
   license all_of: ["MIT", "OFL-1.1", "Apache-2.0"]
-
-  bottle do
-    root_url "https://github.com/ryan-mahoney/homebrew-tap/releases/download/ai-capacity-0.1.0"
-    sha256 arm64_sonoma: "29416eabfcdfe385a83abc519f09326710066300981609674b3df2dfccc0fdfd"
-  end
 
   depends_on arch: :arm64
   depends_on macos: :sonoma

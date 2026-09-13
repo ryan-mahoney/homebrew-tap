@@ -37,6 +37,11 @@ jobs:
             ryan-mahoney/tap/ai-capacity
           brew bottle --merge --write --no-commit ./*.bottle.json
           cp "$(brew --repository ryan-mahoney/tap)/Formula/ai-capacity.rb" Formula/ai-capacity.rb
+          for metadata in ./*.bottle.json; do
+            while IFS=$'\t' read -r local_file release_file; do
+              mv "$local_file" "$release_file"
+            done < <(jq -r '.[].bottle.tags[] | [.local_filename, .filename] | @tsv' "$metadata")
+          done
       - name: Publish and register bottle
         run: |
           gh release create "$RELEASE_TAG" ./*.bottle.tar.gz ./*.bottle.json \
@@ -47,3 +52,8 @@ jobs:
           git add Formula/ai-capacity.rb
           git commit -m "chore: publish $RELEASE_TAG bottle"
           git push origin HEAD:main
+      - name: Verify published installation
+        run: |
+          brew uninstall ai-capacity
+          brew install --force-bottle ryan-mahoney/tap/ai-capacity
+          brew test ryan-mahoney/tap/ai-capacity
